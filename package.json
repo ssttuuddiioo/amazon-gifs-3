@@ -1,0 +1,33 @@
+{
+  "name": "google-drive-video-sync",
+  "version": "1.0.0",
+  "description": "Auto-sync videos from Google Drive to Netlify static site",
+  "main": "sync.js",
+  "scripts": {
+    "sync": "node sync.js",
+    "build": "node sync.js && echo 'Build complete'",
+    "dev": "npx http-server . -p 8080 -o",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "google-drive",
+    "netlify",
+    "video",
+    "sync",
+    "static-site"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^130.0.0",
+    "fs-extra": "^11.2.0",
+    "path": "^0.12.7",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
