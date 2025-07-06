@@ -64,7 +64,6 @@ class VideoGallery {
             <div class="video-item">
                 <video
                     src="${video.path}"
-                    controls
                     muted
                     loop
                     autoplay
