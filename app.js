@@ -67,6 +67,7 @@ class VideoGallery {
                     controls
                     muted
                     loop
+                    autoplay
                     preload="metadata"
                     data-video-name="${video.name}"
                     poster=""
@@ -125,8 +126,6 @@ class VideoGallery {
         noVideos.textContent = message;
     }
 
-
-
     refresh() {
         console.log('🔄 Refreshing videos...');
         this.loadVideos();
@@ -149,15 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.videoGallery = new VideoGallery();
 });
 
-// Auto-refresh every 10 seconds to check for new videos
-setInterval(() => {
-    if (window.videoGallery) {
-        console.log('🔄 Auto-checking for new videos...');
-        window.videoGallery.refresh();
-    }
-}, 10 * 1000); // 10 seconds
-
-// Also check when the page becomes visible again
+// Check when the page becomes visible again (e.g., switching tabs)
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden && window.videoGallery) {
         console.log('👁️ Page visible - checking for new videos...');
