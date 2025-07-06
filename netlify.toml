@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  NPM_FLAGS = "--production=false"
 
 [[headers]]
   for = "/videos/*"
@@ -31,12 +32,11 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# Enable pretty URLs
+# Enable SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin"]}
 
 # Security headers
 [[headers]]
