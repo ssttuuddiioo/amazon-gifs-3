@@ -1,5 +1,21 @@
 {
-  "lastSync": "2025-01-06T20:50:00.000Z",
-  "count": 0,
-  "videos": []
+  "lastSync": "2025-07-06T21:01:56.511Z",
+  "count": 2,
+  "videos": [
+    {
+      "name": "orb-field-test.mp4",
+      "path": "/videos/orb-field-test.mp4",
+      "size": 2785981,
+      "lastModified": "2025-07-06T20:26:11.380Z",
+      "driveId": "demo"
+    },
+    {
+      "name": "phone2.mp4",
+      "path": "/videos/phone2.mp4",
+      "size": 21614440,
+      "lastModified": "2025-07-06T20:14:07.941Z",
+      "driveId": "demo"
+    }
+  ],
+  "demo": true
 }
