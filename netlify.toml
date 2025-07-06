@@ -1,6 +1,6 @@
 [build]
+  command = "npm install && npm run sync"
   publish = "."
-  command = "npm run sync"
 
 [build.environment]
   NODE_VERSION = "18"
