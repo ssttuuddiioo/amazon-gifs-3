@@ -3,31 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Gallery - Auto-Sync from Google Drive</title>
+    <title>Amazon Party Videos</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>🎬 Video Gallery</h1>
-        <p>Auto-synced from Google Drive</p>
-    </header>
-
-    <main>
-        <div class="controls">
-            <button id="playAll">▶️ Play All</button>
-            <button id="pauseAll">⏸️ Pause All</button>
-            <button id="toggleLoop">🔄 Toggle Loop</button>
-            <button id="toggleMute">🔇 Toggle Mute</button>
+    <div class="container">
+        <div class="header">
+            <img src="public/logo.png" alt="Logo" class="logo">
         </div>
 
-        <div class="video-grid" id="videoGrid">
-            <!-- Videos will be dynamically loaded here -->
-        </div>
-    </main>
-
-    <footer>
-        <p>Videos are automatically synced from Google Drive</p>
-    </footer>
+        <div id="loading" class="loading">Loading videos...</div>
+        <div id="no-videos" class="no-videos" style="display: none;">No videos found</div>
+        
+        <div id="video-grid" class="video-grid"></div>
+    </div>
 
     <script src="app.js"></script>
 </body>

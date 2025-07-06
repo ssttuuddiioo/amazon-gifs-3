@@ -5,6 +5,7 @@
   "main": "sync.js",
   "scripts": {
     "sync": "node sync.js",
+    "auto-sync": "node auto-sync.js",
     "build": "node sync.js && echo 'Build complete'",
     "dev": "npx http-server . -p 8080 -o",
     "test": "echo \"No tests yet\" && exit 0"

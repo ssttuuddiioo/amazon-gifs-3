@@ -19,8 +19,18 @@ class GoogleDriveVideoSync {
 
     initializeGoogleDrive() {
         try {
-            // Option 1: Using Service Account (recommended for automation)
-            if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+            // Option 1: Using Service Account JSON file (recommended for automation)
+            if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE) {
+                const keyFile = path.join(__dirname, process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE);
+                const auth = new google.auth.GoogleAuth({
+                    keyFile: keyFile,
+                    scopes: ['https://www.googleapis.com/auth/drive.readonly']
+                });
+                this.drive = google.drive({ version: 'v3', auth });
+                console.log('✅ Google Drive API initialized with Service Account JSON file');
+            }
+            // Option 2: Using Service Account JSON string (fallback)
+            else if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
                 const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
                 const auth = new google.auth.GoogleAuth({
                     credentials: serviceAccount,
@@ -29,7 +39,7 @@ class GoogleDriveVideoSync {
                 this.drive = google.drive({ version: 'v3', auth });
                 console.log('✅ Google Drive API initialized with Service Account');
             }
-            // Option 2: Using OAuth2 credentials
+            // Option 3: Using OAuth2 credentials
             else if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_REFRESH_TOKEN) {
                 const oauth2Client = new google.auth.OAuth2(
                     process.env.GOOGLE_CLIENT_ID,

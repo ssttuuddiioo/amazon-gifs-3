@@ -1,6 +1,20 @@
 {
-  "lastSync": "2025-07-06T19:49:11.405Z",
-  "count": 0,
-  "videos": [],
-  "demo": true
+  "lastSync": "2025-07-06T20:38:49.745Z",
+  "count": 2,
+  "videos": [
+    {
+      "name": "phone2.mp4",
+      "path": "/videos/phone2.mp4",
+      "size": 21614440,
+      "lastModified": "2023-09-21T03:40:54.000Z",
+      "driveId": "1TfuwLhfnvQmEMC3mxjE_jCm9WrggCFR0"
+    },
+    {
+      "name": "orb-field-test.mp4",
+      "path": "/videos/orb-field-test.mp4",
+      "size": 2785981,
+      "lastModified": "2022-09-08T16:30:27.000Z",
+      "driveId": "1Pc2ntbW0aR_y7YSWgVHG3BWkIIHyChy6"
+    }
+  ]
 }
