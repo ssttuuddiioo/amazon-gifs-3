@@ -11,6 +11,10 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Google Cloud credentials
+*.json
+amazon-netlify-*.json
+
 # Build outputs
 dist/
 build/
