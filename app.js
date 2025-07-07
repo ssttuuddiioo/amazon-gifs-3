@@ -66,7 +66,7 @@ class VideoGallery {
                     <video
                         src="${video.path}"
                         muted
-                        preload="metadata"
+                        preload="none"
                         data-video-name="${video.name}"
                         data-playing="false"
                         poster=""
@@ -89,6 +89,13 @@ class VideoGallery {
         // Add video event listeners
         const videos = container.querySelectorAll('video');
         videos.forEach(video => {
+            const wrapper = video.closest('.video-wrapper');
+            const overlay = wrapper.querySelector('.play-overlay');
+            
+            // Initially show play button
+            overlay.innerHTML = '<div class="play-button">▶️</div>';
+            overlay.style.display = 'flex';
+            
             video.addEventListener('loadedmetadata', () => {
                 console.log(`📹 Video loaded: ${video.dataset.videoName}`);
                 // Set video to first frame
@@ -97,6 +104,13 @@ class VideoGallery {
             
             video.addEventListener('error', (e) => {
                 console.error(`❌ Video error: ${video.dataset.videoName}`, e);
+                overlay.innerHTML = '<div class="error-message">❌ Error loading video</div>';
+                overlay.style.display = 'flex';
+            });
+            
+            // Handle video end
+            video.addEventListener('ended', () => {
+                video.dataset.playing = 'false';
             });
         });
     }
@@ -167,21 +181,49 @@ function playVideo(wrapper) {
     const overlay = wrapper.querySelector('.play-overlay');
     
     if (video.dataset.playing === 'false') {
-        // Start playing and looping
-        video.loop = true;
-        video.autoplay = true;
-        video.dataset.playing = 'true';
-        overlay.style.display = 'none';
+        // Show loading state
+        overlay.innerHTML = '<div class="loading-spinner">⏳</div>';
+        overlay.style.display = 'flex';
         
-        video.play().catch(e => {
-            console.log('Play failed:', e);
-            overlay.style.display = 'flex';
-        });
+        // Start loading the video
+        video.preload = 'metadata';
+        video.load();
         
-        // When video ends, show play button again (backup)
-        video.addEventListener('ended', () => {
-            video.dataset.playing = 'false';
-        });
+        // Wait for video to be ready, then play
+        const playWhenReady = () => {
+            video.loop = true;
+            video.dataset.playing = 'true';
+            
+            video.play().then(() => {
+                // Successfully started playing
+                overlay.style.display = 'none';
+                console.log(`✅ Playing: ${video.dataset.videoName}`);
+            }).catch(e => {
+                // Play failed, show error or retry
+                console.log('Play failed:', e);
+                overlay.innerHTML = '<div class="play-button">▶️</div>';
+                overlay.style.display = 'flex';
+                video.dataset.playing = 'false';
+            });
+        };
+        
+        // Listen for when video is ready to play
+        if (video.readyState >= 3) {
+            // Video is already ready
+            playWhenReady();
+        } else {
+            // Wait for video to be ready
+            video.addEventListener('canplay', playWhenReady, { once: true });
+            
+            // Timeout after 10 seconds
+            setTimeout(() => {
+                if (video.dataset.playing === 'false') {
+                    overlay.innerHTML = '<div class="play-button">▶️</div>';
+                    overlay.style.display = 'flex';
+                    console.log('Video load timeout');
+                }
+            }, 10000);
+        }
         
     } else {
         // Toggle play/pause
