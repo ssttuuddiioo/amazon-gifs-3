@@ -1,6 +1,6 @@
-# Last deploy trigger: 2024-12-19 21:55:00
+# Last deploy trigger: 2024-12-19 22:30:00
 [build]
-  command = "npm install && npm run build"
+  command = "./build.sh"
   publish = "."
 
 [build.environment]
