@@ -40,83 +40,6 @@ body {
     position: relative;
 }
 
-.video-wrapper {
-    position: relative;
-    cursor: pointer;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #111;
-}
-
-.video-wrapper:hover {
-    transform: scale(1.02);
-    transition: transform 0.2s ease;
-}
-
-.play-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    transition: opacity 0.2s ease;
-}
-
-.play-overlay:hover {
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.play-button {
-    font-size: 56px;
-    color: white;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
-    transition: transform 0.2s ease;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-}
-
-.play-overlay:hover .play-button {
-    transform: scale(1.15);
-}
-
-.video-title {
-    font-size: 12px;
-    font-weight: 500;
-    text-align: center;
-    padding: 8px 16px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 20px;
-    margin-top: 10px;
-    max-width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-shadow: none;
-}
-
-.loading-spinner {
-    font-size: 32px;
-    animation: spin 1s linear infinite;
-    color: white;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.error-message {
-    font-size: 16px;
-    color: #ff6b6b;
-    text-align: center;
-    padding: 20px;
-}
-
 .video-item::before,
 .video-item::after {
     display: none;
@@ -132,8 +55,18 @@ body {
     height: 200px;
     object-fit: cover;
     display: block;
-    background: #222;
-    border-radius: 12px;
+    background: transparent;
+    border-radius: 8px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.video-item video:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+.video-item video:active {
+    transform: scale(0.98);
 }
 
 .video-item video::-webkit-media-controls {
@@ -150,28 +83,48 @@ body {
 
 .video-controls {
     position: absolute;
-    bottom: 10px;
+    top: 10px;
     right: 10px;
+    z-index: 10;
 }
 
 .download-btn {
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
     border-radius: 20px;
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    color: #000;
+    pointer-events: all;
 }
 
 .download-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    color: #000;
-    text-shadow: none;
+    background: #fff;
     transform: scale(1.05);
+}
+
+/* Add a subtle preview indicator */
+.video-item::after {
+    content: "Click to view full video";
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.video-item:hover::after {
+    opacity: 1;
 }
 
 .loading {
