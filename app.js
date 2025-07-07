@@ -62,21 +62,25 @@ class VideoGallery {
 
         container.innerHTML = this.videos.map(video => `
             <div class="video-item">
-                <video
-                    src="${video.path}"
-                    muted
-                    loop
-                    autoplay
-                    preload="metadata"
-                    data-video-name="${video.name}"
-                    poster=""
-                >
-                    Your browser does not support the video tag.
-                </video>
+                <div class="video-wrapper" onclick="playVideo(this)">
+                    <video
+                        src="${video.path}"
+                        muted
+                        preload="metadata"
+                        data-video-name="${video.name}"
+                        data-playing="false"
+                        poster=""
+                    >
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
                 
                 <div class="video-controls">
                     <button class="download-btn" onclick="downloadVideo('${video.path}', '${video.name}')">
-                        ⬇️ Download
+                        Save
                     </button>
                 </div>
             </div>
@@ -87,6 +91,8 @@ class VideoGallery {
         videos.forEach(video => {
             video.addEventListener('loadedmetadata', () => {
                 console.log(`📹 Video loaded: ${video.dataset.videoName}`);
+                // Set video to first frame
+                video.currentTime = 0;
             });
             
             video.addEventListener('error', (e) => {
@@ -96,7 +102,7 @@ class VideoGallery {
     }
 
     toggleAllVideos() {
-        const videos = document.querySelectorAll('video');
+        const videos = document.querySelectorAll('video[data-playing="true"]');
         const allPaused = Array.from(videos).every(video => video.paused);
         
         videos.forEach(video => {
@@ -153,4 +159,38 @@ document.addEventListener('visibilitychange', () => {
         console.log('👁️ Page visible - checking for new videos...');
         window.videoGallery.refresh();
     }
-}); 
+});
+
+// Play video function
+function playVideo(wrapper) {
+    const video = wrapper.querySelector('video');
+    const overlay = wrapper.querySelector('.play-overlay');
+    
+    if (video.dataset.playing === 'false') {
+        // Start playing and looping
+        video.loop = true;
+        video.autoplay = true;
+        video.dataset.playing = 'true';
+        overlay.style.display = 'none';
+        
+        video.play().catch(e => {
+            console.log('Play failed:', e);
+            overlay.style.display = 'flex';
+        });
+        
+        // When video ends, show play button again (backup)
+        video.addEventListener('ended', () => {
+            video.dataset.playing = 'false';
+        });
+        
+    } else {
+        // Toggle play/pause
+        if (video.paused) {
+            video.play().catch(e => console.log('Play failed:', e));
+            overlay.style.display = 'none';
+        } else {
+            video.pause();
+            video.dataset.playing = 'false';
+        }
+    }
+} 

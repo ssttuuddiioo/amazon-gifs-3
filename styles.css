@@ -29,8 +29,6 @@ body {
     margin-bottom: 20px;
 }
 
-
-
 .video-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -40,6 +38,82 @@ body {
 
 .video-item {
     position: relative;
+}
+
+.video-wrapper {
+    position: relative;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #111;
+}
+
+.video-wrapper:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    transition: opacity 0.2s ease;
+}
+
+.play-overlay:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.play-button {
+    font-size: 56px;
+    color: white;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.play-overlay:hover .play-button {
+    transform: scale(1.15);
+}
+
+.video-title {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    margin-top: 10px;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: none;
+}
+
+.loading-spinner {
+    font-size: 32px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    font-size: 16px;
+    color: #ff6b6b;
+    text-align: center;
+    padding: 20px;
 }
 
 .video-item::before,
@@ -57,7 +131,8 @@ body {
     height: 200px;
     object-fit: cover;
     display: block;
-    background: transparent;
+    background: #222;
+    border-radius: 12px;
 }
 
 .video-item video::-webkit-media-controls {
@@ -74,28 +149,29 @@ body {
 
 .video-controls {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
 }
 
 .download-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
-    padding: 8px 16px;
+    padding: 6px 12px;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    color: #000;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .download-btn:hover {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+    text-shadow: none;
     transform: scale(1.05);
 }
-
-
 
 .loading {
     text-align: center;
