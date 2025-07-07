@@ -3,11 +3,13 @@
 const fs = require('fs-extra');
 const path = require('path');
 const { google } = require('googleapis');
+const ffmpeg = require('fluent-ffmpeg');
 require('dotenv').config();
 
 class GoogleDriveVideoSync {
     constructor() {
         this.videosDir = path.join(__dirname, 'videos');
+        this.previewsDir = path.join(__dirname, 'previews');
         this.videosJsonPath = path.join(__dirname, 'videos.json');
         this.supportedFormats = ['.mp4', '.mov', '.avi', '.mkv', '.webm'];
         this.drive = null;
@@ -66,8 +68,9 @@ class GoogleDriveVideoSync {
         console.log('🔄 Starting Google Drive video sync...');
         
         try {
-            // Ensure videos directory exists
+            // Ensure videos and previews directories exist
             await fs.ensureDir(this.videosDir);
+            await fs.ensureDir(this.previewsDir);
             
             if (!this.drive) {
                 console.log('📺 Demo mode: Creating sample videos.json');
@@ -140,10 +143,15 @@ class GoogleDriveVideoSync {
                     console.log(`⏭️ Skipping (already up to date): ${video.name}`);
                 }
                 
+                // Generate preview for this video
+                const previewPath = await this.generatePreview(localPath, video.name);
+                const previewName = path.basename(previewPath);
+                
                 // Add to local videos list
                 localVideos.push({
                     name: video.name,
                     path: `/videos/${video.name}`,
+                    previewPath: `/previews/${previewName}`,
                     size: parseInt(video.size) || 0,
                     lastModified: video.modifiedTime,
                     driveId: video.id
@@ -190,6 +198,45 @@ class GoogleDriveVideoSync {
         });
     }
 
+    async generatePreview(videoPath, videoName) {
+        const previewName = `preview_${videoName}`;
+        const previewPath = path.join(this.previewsDir, previewName);
+        
+        // Check if preview already exists and is newer than video
+        try {
+            const videoStats = await fs.stat(videoPath);
+            const previewStats = await fs.stat(previewPath);
+            
+            if (previewStats.mtime > videoStats.mtime) {
+                console.log(`⏭️ Preview exists: ${previewName}`);
+                return previewPath;
+            }
+        } catch (error) {
+            // Preview doesn't exist, will generate
+        }
+        
+        console.log(`🎬 Generating preview: ${previewName}`);
+        
+        return new Promise((resolve, reject) => {
+            ffmpeg(videoPath)
+                .setDuration(0.5) // First 0.5 seconds
+                .output(previewPath)
+                .videoCodec('libx264')
+                .audioCodec('aac')
+                .format('mp4')
+                .on('end', () => {
+                    console.log(`✅ Preview generated: ${previewName}`);
+                    resolve(previewPath);
+                })
+                .on('error', (err) => {
+                    console.error(`❌ Preview generation failed for ${videoName}:`, err.message);
+                    // Return original video path as fallback
+                    resolve(videoPath);
+                })
+                .run();
+        });
+    }
+
     async updateVideosJson(videos) {
         const videosData = {
             lastSync: new Date().toISOString(),
@@ -207,6 +254,7 @@ class GoogleDriveVideoSync {
         
         // Check if there are any existing videos in the folder
         try {
+            await fs.ensureDir(this.previewsDir);
             const existingFiles = await fs.readdir(this.videosDir);
             const videoFiles = existingFiles.filter(file => {
                 const ext = path.extname(file).toLowerCase();
@@ -217,9 +265,14 @@ class GoogleDriveVideoSync {
                 const filePath = path.join(this.videosDir, file);
                 const stats = await fs.stat(filePath);
                 
+                // Generate preview for existing video
+                const previewPath = await this.generatePreview(filePath, file);
+                const previewName = path.basename(previewPath);
+                
                 demoVideos.push({
                     name: file,
                     path: `/videos/${file}`,
+                    previewPath: `/previews/${previewName}`,
                     size: stats.size,
                     lastModified: stats.mtime.toISOString(),
                     driveId: 'demo'

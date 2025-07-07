@@ -63,7 +63,7 @@ class VideoGallery {
         container.innerHTML = this.videos.map(video => `
             <div class="video-item">
                 <video
-                    src="${video.path}"
+                    src="${video.previewPath || video.path}"
                     muted
                     loop
                     autoplay
@@ -88,13 +88,6 @@ class VideoGallery {
         // Add video event listeners
         const videos = container.querySelectorAll('video');
         videos.forEach(video => {
-            // Preview loop - reset to beginning after 0.5 seconds
-            video.addEventListener('timeupdate', () => {
-                if (video.currentTime > 0.5) {
-                    video.currentTime = 0;
-                }
-            });
-            
             // Click to open full video in new tab
             video.addEventListener('click', () => {
                 window.open(video.dataset.videoPath, '_blank');
