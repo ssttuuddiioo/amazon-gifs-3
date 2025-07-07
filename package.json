@@ -1,30 +1,25 @@
 {
-  "name": "google-drive-video-sync",
-  "version": "1.0.0",
-  "description": "Auto-sync videos from Google Drive to Netlify static site",
-  "main": "sync.js",
+  "name": "static-video-gallery",
+  "version": "2.0.0",
+  "description": "Static video gallery with WebP thumbnail previews",
+  "main": "generate-thumbs.js",
   "scripts": {
-    "sync": "node sync.js",
-    "auto-sync": "node auto-sync.js",
-    "build": "node sync.js && echo 'Build complete'",
-    "dev": "npx http-server . -p 8080 -o",
+    "build": "node generate-thumbs.js && echo 'Build complete'",
+    "thumbs": "node generate-thumbs.js",
+    "dev": "npm run thumbs && npx http-server . -p 8080 -o",
     "test": "echo \"No tests yet\" && exit 0"
   },
   "keywords": [
-    "google-drive",
-    "netlify",
     "video",
-    "sync",
+    "gallery",
+    "webp",
+    "thumbnails",
     "static-site"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "googleapis": "^130.0.0",
-    "fs-extra": "^11.2.0",
-    "path": "^0.12.7",
-    "dotenv": "^16.3.1",
-    "fluent-ffmpeg": "^2.1.2"
+    "fs-extra": "^11.2.0"
   },
   "devDependencies": {
     "http-server": "^14.1.1"

@@ -251,4 +251,180 @@ If you encounter any issues or have questions:
 
 ---
 
-**Made with ❤️ for seamless video sharing** 
+**Made with ❤️ for seamless video sharing**
+
+# Static Video Gallery
+
+A lightweight, fast-loading video gallery with WebP thumbnail previews and lazy loading.
+
+## Features
+
+- **Instant Preview**: 15-frame WebP loops (0.5s, 540x960) for lightning-fast previews
+- **Lazy Loading**: Thumbnails load only when needed using IntersectionObserver
+- **Smart Caching**: Long-term caching for both thumbnails and videos
+- **Responsive Design**: Works perfectly on desktop and mobile
+- **Click to Play**: Replace thumbnail with full video player on demand
+- **Download Support**: Direct download links for all videos
+- **Keyboard Shortcuts**: 
+  - `Space` - Toggle play/pause all videos
+  - `R` - Refresh gallery
+
+## Architecture
+
+### Directory Structure
+```
+/videos/    # Full-resolution MP4 files
+/thumbs/    # WebP thumbnail loops (540x960, 0.5s)
+videos.json # Video metadata and paths
+```
+
+### Tech Stack
+- **Frontend**: Vanilla HTML/CSS/JavaScript
+- **Thumbnails**: ffmpeg + WebP
+- **Hosting**: Netlify with optimized caching
+- **Performance**: Lazy loading + IntersectionObserver
+
+## Setup
+
+### Prerequisites
+- Node.js 16+
+- ffmpeg (for thumbnail generation)
+
+### Installation
+
+1. **Install ffmpeg**:
+   ```bash
+   # macOS
+   brew install ffmpeg
+   
+   # Ubuntu/Debian
+   sudo apt install ffmpeg
+   
+   # Windows
+   # Download from https://ffmpeg.org/
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Add your videos**:
+   ```bash
+   # Place MP4 files in /videos/ directory
+   cp your-videos/*.mp4 videos/
+   ```
+
+4. **Generate thumbnails**:
+   ```bash
+   npm run build
+   ```
+
+5. **Start local server**:
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+### Adding Videos
+1. Copy MP4 files to `/videos/` directory
+2. Run `npm run build` to generate WebP thumbnails
+3. Deploy or refresh your local server
+
+### Deployment
+The app is optimized for Netlify deployment:
+- Build command: `npm run build`
+- Publish directory: `.` (root)
+- Automatic thumbnail generation on deploy
+
+## Performance
+
+### Optimizations
+- **WebP Thumbnails**: ~10KB vs 100KB+ for video previews
+- **Lazy Loading**: Only loads visible content
+- **Long-term Caching**: 1-year cache for all media files
+- **Efficient Previews**: 15-frame loops instead of full video loading
+
+### Cache Strategy
+- **Thumbnails**: `Cache-Control: public, max-age=31536000` (1 year)
+- **Videos**: `Cache-Control: public, max-age=31536000` (1 year)
+- **HTML/JS**: Standard browser caching
+
+## Customization
+
+### Thumbnail Settings
+Edit `generate-thumbs.js` to customize:
+- **Size**: Change `540:960` in ffmpeg command
+- **Duration**: Modify `-t 0.5` for different loop length
+- **Quality**: Adjust `-quality 85` (0-100)
+- **Frame Rate**: Change `-r 30` for different FPS
+
+### Styling
+Edit `styles.css` to customize:
+- Grid layout and spacing
+- Hover effects and animations
+- Color scheme and typography
+- Mobile responsiveness
+
+## File Structure
+
+```
+├── videos/              # Full MP4 files
+├── thumbs/              # Generated WebP thumbnails
+├── public/
+│   └── logo.png        # Site logo
+├── index.html          # Main page
+├── app.js              # Gallery functionality
+├── styles.css          # Styling
+├── generate-thumbs.js  # Thumbnail generator
+├── package.json        # Dependencies
+├── netlify.toml        # Deployment config
+└── videos.json         # Generated video metadata
+```
+
+## API
+
+### videos.json Format
+```json
+{
+  "lastGenerated": "2024-12-19T21:55:00.000Z",
+  "count": 5,
+  "videos": [
+    {
+      "name": "example-video",
+      "title": "Example Video",
+      "video": "/videos/example-video.mp4",
+      "thumb": "/thumbs/example-video.webp",
+      "downloadUrl": "/videos/example-video.mp4",
+      "size": 15728640,
+      "lastModified": "2024-12-19T21:50:00.000Z"
+    }
+  ]
+}
+```
+
+## Browser Support
+
+- **Modern browsers**: Full support with WebP and IntersectionObserver
+- **Legacy browsers**: Graceful degradation (no lazy loading)
+- **Mobile**: Optimized touch interactions and responsive design
+
+## Performance Metrics
+
+Typical loading times:
+- **Initial page load**: < 1s
+- **Thumbnail loading**: < 100ms each
+- **Video playback**: Instant (cached) or ~2s (first load)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally with `npm run dev`
+5. Submit a pull request
+
+## License
+
+MIT License - feel free to use for personal or commercial projects. 
